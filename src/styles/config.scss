@@ -1,0 +1,31 @@
+/** @format */
+
+// 全局性公共样式
+/*
+ 添加依赖 sass-resources-loader， 在webpack中sassModuleRegex规则中配置全局的路径
+  {
+
+    test: sassRegex,
+    exclude: sassModuleRegex,
+    use: getStyleLoaders( {
+        importLoaders: 3,
+        sourceMap: isEnvProduction && shouldUseSourceMap,
+      },
+      'sass-loader'
+    ).concat( {
+        loader: 'sass-resources-loader',
+        options: {
+          resources: [ path.resolve(__dirname, '../src/styles/config.scss'),
+          ],
+        }
+      }
+    ),
+    sideEffects: true,
+  }
+*/
+
+@import "./normalize.scss";
+
+body {
+  background-color: #001529;
+}

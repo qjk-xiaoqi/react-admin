@@ -1,3 +1,5 @@
+/** @format */
+
 'use strict';
 
 const fs = require('fs');
@@ -52,7 +54,7 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function(webpackEnv) {
+module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -76,7 +78,7 @@ module.exports = function(webpackEnv) {
         // css is located in `static/css`, use '../../' to locate index.html folder
         // in production `paths.publicUrlOrPath` can be a relative path
         options: paths.publicUrlOrPath.startsWith('.')
-          ? { publicPath: '../../' }
+          ? {publicPath: '../../'}
           : {},
       },
       {
@@ -253,7 +255,7 @@ module.exports = function(webpackEnv) {
               : false,
           },
           cssProcessorPluginOptions: {
-            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+            preset: ['default', {minifyFontValues: {removeQuotes: false}}],
           },
         }),
       ],
@@ -322,7 +324,7 @@ module.exports = function(webpackEnv) {
       strictExportPresence: true,
       rules: [
         // Disable require.ensure as it's not a standard language feature.
-        { parser: { requireEnsure: false } },
+        {parser: {requireEnsure: false}},
 
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
@@ -336,7 +338,6 @@ module.exports = function(webpackEnv) {
                 formatter: require.resolve('react-dev-utils/eslintFormatter'),
                 eslintPath: require.resolve('eslint'),
                 resolvePluginsRelativeTo: __dirname,
-                
               },
               loader: require.resolve('eslint-loader'),
             },
@@ -369,7 +370,7 @@ module.exports = function(webpackEnv) {
                 customize: require.resolve(
                   'babel-preset-react-app/webpack-overrides'
                 ),
-                
+
                 plugins: [
                   [
                     require.resolve('babel-plugin-named-asset-import'),
@@ -380,6 +381,13 @@ module.exports = function(webpackEnv) {
                             '@svgr/webpack?-svgo,+titleProp,+ref![path]',
                         },
                       },
+                    },
+                  ],
+                  [
+                    'import',
+                    {
+                      libraryName: 'antd',
+                      style: 'css',
                     },
                   ],
                 ],
@@ -405,13 +413,13 @@ module.exports = function(webpackEnv) {
                 presets: [
                   [
                     require.resolve('babel-preset-react-app/dependencies'),
-                    { helpers: true },
+                    {helpers: true},
                   ],
                 ],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                
+
                 // Babel sourcemaps are needed for debugging into node_modules
                 // code.  Without the options below, debuggers like VSCode
                 // show incorrect code and set breakpoints on the wrong lines.
@@ -463,7 +471,15 @@ module.exports = function(webpackEnv) {
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                 },
                 'sass-loader'
-              ),
+              ).concat({
+                loader: 'sass-resources-loader',
+                options: {
+                  resources: [
+                    path.resolve(__dirname, '../src/styles/config.scss'),
+                  ],
+                },
+              }),
+
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
@@ -500,6 +516,10 @@ module.exports = function(webpackEnv) {
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
+            },
+            {
+              test: /\.scss$/,
+              loader: ['style-loader', 'css-loader', 'sass-loader'],
             },
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.
